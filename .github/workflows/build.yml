@@ -20,13 +20,16 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.5'
 
-      - name: Build debug APK with system Gradle
-        run: gradle assembleDebug
+      - name: Build debug APK
+        run: gradle assembleDebug --stacktrace
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: app-debug
           path: "**/build/outputs/apk/debug/*.apk"
