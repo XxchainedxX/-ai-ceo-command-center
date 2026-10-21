@@ -3,7 +3,7 @@
     <application
         android:allowBackup="false"
         android:label="AI CEO Command Center"
-        android:theme="@style/AppTheme"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:usesCleartextTraffic="false">
         <activity
             android:name=".MainActivity"
