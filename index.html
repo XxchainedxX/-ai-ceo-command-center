@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI CEO — Business Command Center</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#182230;background:#f4f6fa}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:1180px;margin:auto;padding:22px}
+header{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:20px}
+h1{font-size:clamp(1.45rem,3vw,2.1rem);margin:0}h2{font-size:1.05rem;margin:0 0 14px}
+.sub{color:#657286;margin-top:6px;font-size:.95rem}.pill{border-radius:999px;padding:7px 11px;background:#e5f6ed;color:#17623b;font-size:.8rem;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.card,.panel{background:white;border:1px solid #e2e7ef;border-radius:15px;padding:17px;box-shadow:0 2px 8px #18223008}
+.metric-label{color:#687588;font-size:.84rem}.metric{font-size:1.8rem;font-weight:750;margin-top:7px;overflow-wrap:anywhere}
+.cols{display:grid;grid-template-columns:1.05fr 1.95fr;gap:16px}.stack{display:grid;gap:16px}
+label{display:block;font-size:.85rem;font-weight:650;margin:11px 0 6px}
+input,select,textarea{width:100%;border:1px solid #ccd5e2;border-radius:9px;padding:10px 11px;font:inherit;background:#fff;color:#182230}
+textarea{min-height:75px;resize:vertical}
+button{border:0;border-radius:9px;padding:10px 13px;font:inherit;font-weight:700;cursor:pointer;background:#2359d1;color:white}
+button:hover{filter:brightness(.95)}button.secondary{background:#edf1f7;color:#263449}button.danger{background:#fff0f0;color:#9a2525}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.table-wrap{overflow:auto}
+table{border-collapse:collapse;width:100%;min-width:650px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid #edf0f5;font-size:.88rem;vertical-align:top}th{color:#657286;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+.status{display:inline-block;border-radius:999px;padding:4px 8px;background:#edf1f7;font-size:.76rem;white-space:nowrap}
+.small{font-size:.83rem;color:#687588;line-height:1.5}.activity{padding:10px 0;border-bottom:1px solid #edf0f5}.activity:last-child{border-bottom:0}
+.notice{background:#fff8e7;border:1px solid #f0dda7;border-radius:12px;padding:13px 15px;color:#664d11;font-size:.88rem;line-height:1.5;margin-bottom:18px}
+.empty{padding:20px;text-align:center;color:#687588}.footer{margin-top:18px;color:#758195;font-size:.8rem}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:1fr}}
+@media(max-width:430px){.wrap{padding:13px}.grid{gap:8px}.card{padding:13px}.metric{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><h1>AI CEO — Command Center</h1><div class="sub">Your first business control panel · local prototype</div></div>
+  <span class="pill">OWNER CONTROL ENABLED</span>
+</header>
+
+<div class="notice"><strong>Prototype status:</strong> This dashboard records leads and activities in this browser. It does not yet contact customers, run an AI model, sign documents, process payments, or connect to your bank. Never enter passwords, bank details, or sensitive client data here.</div>
+
+<section class="grid">
+  <div class="card"><div class="metric-label">Leads tracked</div><div class="metric" id="mLeads">0</div></div>
+  <div class="card"><div class="metric-label">Customers won</div><div class="metric" id="mWon">0</div></div>
+  <div class="card"><div class="metric-label">Monthly recurring revenue</div><div class="metric" id="mRevenue">$0</div></div>
+  <div class="card"><div class="metric-label">Follow-ups due</div><div class="metric" id="mDue">0</div></div>
+</section>
+
+<div class="cols">
+  <div class="stack">
+    <section class="panel">
+      <h2>Add a prospective customer</h2>
+      <form id="leadForm">
+        <label for="company">Business name *</label><input id="company" required maxlength="100" placeholder="Example: ABC Auto Body">
+        <label for="contact">Contact name (optional)</label><input id="contact" maxlength="100" placeholder="Owner or service manager">
+        <label for="email">Business email or public contact method</label><input id="email" maxlength="150" placeholder="Use only contact details you may lawfully use">
+        <label for="service">Potential service</label>
+        <select id="service"><option>Missed-inquiry follow-up</option><option>Appointment reminders</option><option>Estimate follow-up tracker</option><option>Review request workflow</option><option>AI admin automation</option></select>
+        <label for="price">Proposed monthly price ($)</label><input id="price" type="number" min="0" max="1000000" step="25" value="500">
+        <label for="next">Next follow-up date</label><input id="next" type="date">
+        <label for="notes">Notes</label><textarea id="notes" maxlength="1000" placeholder="What problem might this business need help solving?"></textarea>
+        <div class="actions"><button type="submit">Add lead</button><button type="reset" class="secondary">Clear form</button></div>
+      </form>
+    </section>
+    <section class="panel">
+      <h2>AI CEO work queue</h2>
+      <p class="small">Suggested next steps based on your records. These are recommendations only; no outside action is taken.</p>
+      <div id="recommendations" class="small">Add a lead to begin building your work queue.</div>
+      <div class="actions"><button id="logPlan" class="secondary">Log daily review</button></div>
+    </section>
+  </div>
+
+  <div class="stack">
+    <section class="panel">
+      <h2>Sales pipeline</h2>
+      <div class="actions" style="margin-top:0;margin-bottom:12px">
+        <input id="search" placeholder="Search leads..." aria-label="Search leads" style="max-width:260px">
+        <button id="export" class="secondary">Export CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Business</th><th>Service / price</th><th>Status</th><th>Next follow-up</th><th>Actions</th></tr></thead><tbody id="leadRows"></tbody></table>
+      </div>
+      <div id="noLeads" class="empty">No leads yet. Add your first prospect on the left.</div>
+    </section>
+    <section class="panel">
+      <h2>Activity log</h2>
+      <p class="small">A simple record of changes made in this prototype.</p>
+      <div id="activityList"></div>
+      <div class="actions"><button id="exportLog" class="secondary">Export activity log</button><button id="clearData" class="danger">Clear all local data</button></div>
+    </section>
+  </div>
+</div>
+<div class="footer">Free-first starter component · Data is saved in this browser only. Export backups regularly. This is not a secure multi-user production system.</div>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const KEY = "ai_ceo_command_center_v1";
+  const statuses = ["New","Contacted","Interested","Proposal sent","Won","Lost"];
+  let state = { leads: [], activities: [] };
+  try { const saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved && Array.isArray(saved.leads) && Array.isArray(saved.activities)) state = saved; } catch(e) {}
+  const today = () => new Date().toISOString().slice(0,10);
+  const money = n => new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(Number(n)||0);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) { alert("Could not save in this browser. Export your records as a backup."); } }
+  function log(message){ state.activities.unshift({at:new Date().toLocaleString(),message}); state.activities=state.activities.slice(0,200); }
+  function render(){
+    $("mLeads").textContent=state.leads.length;
+    $("mWon").textContent=state.leads.filter(x=>x.status==="Won").length;
+    $("mRevenue").textContent=money(state.leads.filter(x=>x.status==="Won").reduce((a,x)=>a+(Number(x.price)||0),0));
+    $("mDue").textContent=state.leads.filter(x=>x.status!=="Won"&&x.status!=="Lost"&&x.next&&x.next<=today()).length;
+    const q=$("search").value.trim().toLowerCase();
+    const list=state.leads.filter(x=>[x.company,x.contact,x.email,x.service,x.status].join(" ").toLowerCase().includes(q));
+    $("leadRows").innerHTML=list.map(x=>`<tr>
+      <td><strong>${esc(x.company)}</strong><br><span class="small">${esc(x.contact||"")}</span><br><span class="small">${esc(x.email||"")}</span></td>
+      <td>${esc(x.service)}<br><strong>${money(x.price)}/mo</strong></td>
+      <td><select aria-label="Status for ${esc(x.company)}" data-status="${x.id}">${statuses.map(s=>`<option ${s===x.status?"selected":""}>${s}</option>`).join("")}</select></td>
+      <td>${esc(x.next||"Not set")}<br><span class="small">${x.next&&x.next<=today()&&x.status!=="Won"&&x.status!=="Lost"?"Due now":""}</span></td>
+      <td><button class="secondary" data-note="${x.id}">Log activity</button> <button class="danger" data-delete="${x.id}">Delete</button></td>
+    </tr>`).join("");
+    $("noLeads").style.display=list.length?"none":"block";
+    const due=state.leads.filter(x=>x.status!=="Won"&&x.status!=="Lost"&&x.next&&x.next<=today());
+    const uncontacted=state.leads.filter(x=>x.status==="New");
+    const proposals=state.leads.filter(x=>x.status==="Interested");
+    let rec=[];
+    if(due.length) rec.push(`<p><strong>Follow up today:</strong> ${due.map(x=>esc(x.company)).join(", ")}.</p>`);
+    if(uncontacted.length) rec.push(`<p><strong>Prepare first contact:</strong> ${uncontacted.slice(0,5).map(x=>esc(x.company)).join(", ")}. Check contact permissions and personalize the message.</p>`);
+    if(proposals.length) rec.push(`<p><strong>Advance opportunities:</strong> ${proposals.map(x=>esc(x.company)).join(", ")}. Consider preparing a proposal.</p>`);
+    if(!rec.length) rec.push("<p>No urgent items. Add a lead or review your open opportunities.</p>");
+    $("recommendations").innerHTML=rec.join("");
+    $("activityList").innerHTML=state.activities.slice(0,12).map(a=>`<div class="activity"><div>${esc(a.message)}</div><div class="small">${esc(a.at)}</div></div>`).join("")||'<div class="empty">No activity recorded yet.</div>';
+  }
+  $("leadForm").addEventListener("submit",e=>{
+    e.preventDefault();
+    const lead={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),company:$("company").value.trim(),contact:$("contact").value.trim(),email:$("email").value.trim(),service:$("service").value,price:Number($("price").value)||0,next:$("next").value,notes:$("notes").value.trim(),status:"New",created:new Date().toISOString()};
+    if(!lead.company)return;
+    state.leads.unshift(lead); log(`Added lead: ${lead.company}`); save(); render(); e.target.reset(); $("price").value=500;
+  });
+  $("leadRows").addEventListener("change",e=>{
+    const id=e.target.dataset.status;if(!id)return;
+    const lead=state.leads.find(x=>x.id===id);if(!lead)return;
+    const old=lead.status;lead.status=e.target.value;log(`${lead.company}: status changed from ${old} to ${lead.status}`);save();render();
+  });
+  $("leadRows").addEventListener("click",e=>{
+    const del=e.target.dataset.delete;
+    if(del){const lead=state.leads.find(x=>x.id===del);if(lead&&confirm(`Delete ${lead.company}?`)){state.leads=state.leads.filter(x=>x.id!==del);log(`Deleted lead: ${lead.company}`);save();render();}return;}
+    const id=e.target.dataset.note;
+    if(id){const lead=state.leads.find(x=>x.id===id);if(!lead)return;const note=prompt(`Add an activity note for ${lead.company}:`);if(note&&note.trim()){log(`${lead.company}: ${note.trim()}`);save();render();}}
+  });
+  $("search").addEventListener("input",render);
+  $("logPlan").addEventListener("click",()=>{log("Completed a manual daily review of the sales pipeline.");save();render();});
+  function download(name,content,type="text/csv"){
+    if (window.AndroidDownload && typeof window.AndroidDownload.saveCsv === "function") {
+      window.AndroidDownload.saveCsv(name, content);
+      return;
+    }
+    const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+  function csv(rows){return rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");}
+  $("export").addEventListener("click",()=>{
+    const rows=[["Business","Contact","Contact method","Service","Monthly price","Status","Next follow-up","Notes","Created"],...state.leads.map(x=>[x.company,x.contact,x.email,x.service,x.price,x.status,x.next,x.notes,x.created])];
+    download("ai-ceo-leads.csv",csv(rows));
+  });
+  $("exportLog").addEventListener("click",()=>download("ai-ceo-activity.csv",csv([["Date/time","Activity"],...state.activities.map(a=>[a.at,a.message])])));
+  $("clearData").addEventListener("click",()=>{
+    if(confirm("This permanently clears this browser's saved leads and activity log. Export backups first. Continue?")){state={leads:[],activities:[]};save();render();}
+  });
+  render();
+})();
+</script>
+</body>
+</html>
